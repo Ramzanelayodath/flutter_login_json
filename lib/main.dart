@@ -31,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
-  bool _isLoading = true;
+  bool apiCall = false;
   @override
   Widget build(BuildContext context) {
 
@@ -70,12 +70,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: MaterialButton(onPressed:(){
+                      setState(() {
+                        apiCall = true;
+                      });
                       login(username.text, password.text);
                     },
                     child: Text("Login",style: TextStyle(color: Colors.white)),
-                    color: Colors.blue,)
+                    color: Colors.blue,),
+
                   ),
                 ),
+                Center(
+                  child: getProperWidget(),
+                )
 
 
           ],
@@ -91,8 +98,16 @@ class _MyHomePageState extends State<MyHomePage> {
     print('Respone ${response.statusCode}');
     if(response.statusCode == 200)
       {
+        setState(() {
+          apiCall = false;
+        });
         Navigator.push(context, MaterialPageRoute(builder: (context) =>home()));
       }
+
+  }
+  Widget getProperWidget(){
+    if(apiCall)
+      return new CircularProgressIndicator();
 
   }
 }
